@@ -1,6 +1,5 @@
 # decl_enum
-C++ static support for converting strings to associated enumeration items (header only).
-The implementation is based on static hash maps (std::unordered_map).
+C++ static support for converting strings to associated enumeration items (header only). The enumeration is sequential, starting from zero. The implementation is based on static hash maps (std::unordered_map).
 
 ## Example
 ```
