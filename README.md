@@ -6,11 +6,11 @@ The implementation is based on static hash maps (std::unordered_map).
 ```
 #include <decl_enum.h>
 
-decl_enum(Currency,  euro, dollar, pound, renminbi);
+decl_enum(currency,  euro, dollar, pound, renminbi);
 ```
 This will lead to
 ```
-namespace Currency
+namespace currency
 {
   enum id
   {
@@ -36,9 +36,9 @@ namespace Currency
 
 ## Usage
 ```
-auto data = Currency::meta::parse(text, textLength);
+auto data = currency::meta::parse(text, text_length);
 if (data.second)
 {
-   Currency::id value = data.first;
+   currency::id value = data.first;
 }
 ```
