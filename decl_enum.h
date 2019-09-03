@@ -1,6 +1,6 @@
 #pragma once
 #ifndef PCH
-	#include <unordered_map>
+	#include <unordered_map>	#include <cstring>
 #endif
 
 #ifdef _MSC_VER // Microsoft compilers
@@ -53,49 +53,57 @@
 #define STRINGIZE_SINGLE(expression) #expression,
 #define STRINGIZE(...) IDENTITY(MAP(STRINGIZE_SINGLE, __VA_ARGS__))
 
-constexpr size_t length(const char* const text)
-{
-	return *text != 0 ? 1 + length(text + 1) : 0;
-}
-
-constexpr size_t hash_of(const char* const data, const size_t count)
-{
-	constexpr auto initial = size_t(14695981039346656037ull);
-	constexpr auto prime = size_t(1099511628211ull);
-
-	auto result = initial;
-	for (auto i = 0; i != count; ++i)
-	{
-		result ^= static_cast<size_t>(data[i]);
-		result *= prime;
-	}
-
-	return result;
-}
-
-template <size_t _Count>
-constexpr size_t hash_of(const char(&data)[_Count])
-{
-	return hash_of(data, _Count - 1);
-}
-
-#define decl_enum(name, ...) \
-namespace name \
-{ \
-	enum id { __VA_ARGS__ }; \
-	std::pair<id, bool> parse(const char* text, const size_t text_size)\
+#define decl_enum_base(name, base_type_decl, ...)\
+namespace name\
+{\
+	enum id base_type_decl { __VA_ARGS__ };\
+	namespace meta\
 	{\
-		static const auto hash_id_map = []() \
+		constexpr unsigned item_count = GET_ARG_COUNT(__VA_ARGS__);\
+		constexpr const char* const texts[] = { STRINGIZE(__VA_ARGS__) };\
+		constexpr const char* text_of(const id id_item) { return texts[id_item]; };\
+		constexpr size_t length(const char* const text)\
 		{\
-			std::unordered_map<size_t, id> result;\
-			constexpr const char* const items[] = { STRINGIZE(__VA_ARGS__) }; \
-			for (auto i = 0; i != GET_ARG_COUNT(__VA_ARGS__); ++i)\
+			return *text != 0 ? 1 + length(text + 1) : 0;\
+		}\
+		constexpr size_t hash_of(const char* const data, const size_t count)\
+		{\
+			constexpr auto initial = size_t(14695981039346656037ull);\
+			constexpr auto prime = size_t(1099511628211ull);\
+			auto result = initial;\
+			for (auto i = 0; i != count; ++i)\
 			{\
-				result.insert(std::make_pair(hash_of(items[i], length(items[i])), id(i)));\
+				result ^= static_cast<size_t>(data[i]);\
+				result *= prime;\
 			}\
 			return result;\
-		}();\
-		auto pos = hash_id_map.find(hash_of(text, text_size));\
-		return pos != hash_id_map.end() ? std::make_pair(pos->second, true) : std::make_pair(id(0), false);\
-	}\
+		}\
+		template <size_t _Count>\
+		constexpr size_t hash_of(const char(&data)[_Count])\
+		{\
+			return hash_of(data, _Count - 1);\
+		}\
+		std::pair<id, bool> parse(const char* text_item, const size_t text_item_size)\
+		{\
+			static const auto hash_id_map = []()\
+			{\
+				std::unordered_map<size_t, id> result;\
+				for (auto i = 0; i != item_count; ++i)\
+				{\
+					auto enum_text = texts[i];\
+					result.insert(std::make_pair(hash_of(enum_text, length(enum_text)), id(i)));\
+				}\
+				return result;\
+			}();\
+			auto pos = hash_id_map.find(hash_of(text_item, text_item_size));\
+			return pos != hash_id_map.end() ? std::make_pair(pos->second, true) : std::make_pair(id(0), false);\
+		}\
+		std::pair<id, bool> parse(const char* text_item)\
+		{\
+			return parse(text_item, std::strlen(text_item));\
+		}\
+	};\
 };
+
+#define decl_enum(name, ...) decl_enum_base(name,  , ##__VA_ARGS__)
+#define decl_typed_enum(name, base_type, ...) decl_enum_base(name, :base_type, ##__VA_ARGS__)

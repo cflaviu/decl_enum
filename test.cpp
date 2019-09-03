@@ -1,21 +1,27 @@
 #include "decl_enum.h"
 #include <cassert>
 
-decl_enum(Currency,  euro, dollar, pound, renminbi);
+decl_enum(currency,  euro, dollar, pound, renminbi);
+decl_typed_enum(currency2, short,  euro, dollar, pound, renminbi);
 
 int main()
 {
+	auto size1 = sizeof(currency::id);
+	auto size2 = sizeof(currency2::id);
+
+	auto count = currency::meta::item_count;
+
 	{
-		auto data = Currency::parse("euro", 4);
+		auto data = currency::meta::parse("euro", 4);
 		assert(data.second);
-		assert(data.first == Currency::euro);
+		assert(data.first == currency::euro);
 	}
 
 	{
-		auto data = Currency::parse("pound", 5);
+		auto data = currency::meta::parse("pound");
 		assert(data.second);
-		assert(data.first == Currency::pound);
+		assert(data.first == currency::pound);
 	}
 
-	return Currency::parse("a", 1).first;
+	return currency::meta::parse("a", 1).first;
 }
