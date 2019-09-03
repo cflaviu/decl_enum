@@ -16,17 +16,27 @@ namespace Currency
   {
     euro,
     dollar,
-    poundm
+    pound,
     renminbi
   };
 
-  std::pair<id, bool> parse(const char* text, const size_t text_length);
+  namespace meta
+  {
+    const unsigned item_count = 4;
+    
+    constexpr const char* const texts[] = { "euro", "dollar", "pound", "renminbi" };
+    
+    constexpr const char* text_of(const id id_item);
+    
+    std::pair<id, bool> parse(const char* text_item);
+    std::pair<id, bool> parse(const char* text_item, const size_t text_item_length);
+  }
 }
  ```
 
 ## Usage
 ```
-auto data = Currency::parse(text, textLength);
+auto data = Currency::meta::parse(text, textLength);
 if (data.second)
 {
    Currency::id value = data.first;
