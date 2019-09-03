@@ -22,7 +22,7 @@ namespace Currency
 
   namespace meta
   {
-    const unsigned item_count = 4;
+    constexpr unsigned item_count = 4;
     
     constexpr const char* const texts[] = { "euro", "dollar", "pound", "renminbi" };
     
