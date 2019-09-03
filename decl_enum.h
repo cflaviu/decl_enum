@@ -1,6 +1,7 @@
 #pragma once
 #ifndef PCH
-	#include <unordered_map>	#include <cstring>
+	#include <unordered_map>
+	#include <cstring>
 #endif
 
 #ifdef _MSC_VER // Microsoft compilers
