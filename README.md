@@ -41,3 +41,6 @@ if (data.second)
    currency::id value = data.first;
 }
 ```
+```
+auto text = currency::meta::text_of(currency::euro);
+```
