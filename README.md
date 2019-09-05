@@ -1,5 +1,5 @@
 # decl_enum
-C++ support for enumerations with textual representation (header only). The enumeration is sequential, starting from zero. It supports conversion from text to enumeration. The implementation is based on static hash maps (std::unordered_map).
+C++ support for enumerations with textual representation (header only). The enumeration is sequential, starting from zero. It supports conversions enumeration to text and text to enumeration. The implementation is based on static hash maps (std::unordered_map).
 
 ## Example
 ```
