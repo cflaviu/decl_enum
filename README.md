@@ -3,7 +3,7 @@ C++ support for enumerations with textual representation (header only). The enum
 
 ## Example
 ```
-#include <decl_enum.h>
+#include <decl_enum.hpp>
 
 decl_enum(currency,  euro, dollar, pound, renminbi);
 ```
@@ -23,9 +23,9 @@ namespace currency
   {
     constexpr unsigned item_count = 4;
     
-    constexpr const char* const texts[] = { "euro", "dollar", "pound", "renminbi" };
+    constexpr const char* const texts[item_count] = { "euro", "dollar", "pound", "renminbi" };
     
-    constexpr const char* text_of(const id id_item);
+    constexpr const char* text_of(const id id_item) noexcept;
     
     std::pair<id, bool> parse(const char* text_item);
     std::pair<id, bool> parse(const char* text_item, const size_t text_item_length);
